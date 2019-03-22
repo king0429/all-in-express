@@ -5,22 +5,40 @@
 html,body {
   width: 100%;
   height: 100%;
+  font-family: Roboto,Helvetica Neue,Helvetica,Arial,sans-serif;
+  background: rgba(250, 250, 250, 1);
+}
+h4 {
+  font-weight: 400;
+  color: #212121;
 }
 .dash_board {
   position: relative;
   width: 100%;
-  height: 20%;
+  height: 19%;
   background: #4CAF50;
   margin-bottom: 20px;
 }
+.dash_board h1 {
+  color: #fff;
+  padding: 24px 0 0 20px;
+  font-weight: bold;
+}
+.dash_board h2 {
+  color: #B2DFDB;
+  margin: 8px 20px;
+  font-weight: normal;
+}
 .dash_board .star_wrap {
   position: absolute;
-  bottom: -8px;
-  width: 45px;
-  height: 45px;
-  right: 15px;
+  bottom: -23px;
+  width: 50px;
+  height: 50px;
+  right: 40px;
+  background: #4CAF50;
   transform: rotateZ(16deg);
-  border: 3px solid #fff;
+  /* border: 3px solid #fff; */
+  box-shadow: 3px 3px 5px 0px #aaa;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -51,12 +69,12 @@ html,body {
   margin-top: 15px;
   display: block;
   height: 24px;
-  padding: 3px;
+  padding: 3px 5px;
   outline: none;
   border: 1px solid #dadada;
   border-radius: 2px;
 }
 p.desc {
-  margin: 15px;
-  color: #666;
+  margin: 10px 0;
+  color: #727272;
 }

@@ -109,6 +109,8 @@ exports.sqider = {
 					})
 					s = a
 				}
+				// 组织缓存
+				res.header('Cache-Control', 'no-store')
 				res.render('inner_index', {data: s, title})
 			} else {
 				res.render('inner_index', {data: [], title: '未找到'})

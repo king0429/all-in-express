@@ -81,8 +81,7 @@
 				let id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1, window.location.pathname.length)
 				m.forEach(val => {
 					if (val.id === id) {
-						console.log(val)
-						$(window).scrollTop(val.offse)
+						$(window).scrollTop(val.offset)
 						return false
 					}
 				})
@@ -108,17 +107,20 @@
 								marker = JSON.parse(localStorage.marker)
 							}
 						}
-						let hasAdd = false
+						let hasAdd = -1
 						let obj = {id: str, offset: $(window).scrollTop(), cr_t: new Date().getTime(), view_height: $(document).height()}
-						marker.forEach((val) => {
+						marker.forEach((val, index) => {
 							if (val.id === obj.id) {
-								hasAdd = true
+								hasAdd = index
 								val = obj
 							}
 						})
-						if (!hasAdd) {
+						if (hasAdd === -1) {
 							marker.push(obj)
+						} else {
+							marker[hasAdd] = obj
 						}
+						console.log(marker)
 						localStorage.marker = JSON.stringify(marker)
 						document.cookie = `bookmarks={"list":` + JSON.stringify(marker) + ', "http":true}'
 						alert('添加书签成功')

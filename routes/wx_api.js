@@ -15,22 +15,10 @@ let getClientIp = function (req) {
 /* 微信小程序接口  nosql版本， sql版本转化成 sql语句*/
 router.get('/test', function(req, res, next) {
 	let rs = fs.readFileSync('./database/wx_data.js', 'utf-8')
-	console.log(typeof rs)
 	var hah = eval(rs)
-	console.log(hah)
-	console.log(hah.good[3])
 	hah.good[3].uid = '77777'
-	// console.log(hah)
 	var str = JSON.stringify(hah)
-	// console.log(str)
-	// console.log(rs)
-	// var a = JSON.parse(rs)
-	// console.log(a)
-	// a.haha = 'ndljshfkjsdahfjhds'
-	// var x = JSON.stringify(a)
-	// console.log(x)
 	fs.writeFileSync('./database/aaa.js', str, 'utf-8')
-	// db.aaa = 1
   res.send({db})
 });
 router.get('/ip', function (req, res) {
