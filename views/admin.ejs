@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src='./javascripts/jquery.min.js'></script>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <title>九星金融平台管理后台</title>
+  <style media="screen">
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      width: 100%;
+      height: 100%;
+      background:rgba(64,158,255,1) url('./bg.png') no-repeat 100% 100%;
+      /* background-position: 100% 220%; */
+    }
+    body {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header {
+      width: 100%;
+      height: 70px;
+      /* background: rgba(235,97,0, 0.76); */
+      background: #343536;
+      color: #fff;
+      position: absolute;
+      top: 0;
+    }
+    header p {
+      padding: 0 50px;
+      line-height: 70px;
+    }
+    .login {
+      background: #fff;
+      padding: 36px 25px;
+      /* width: 400px; */
+      height: 200px;
+      border-radius: 2px;
+      display: none;
+      box-shadow: 5px 5px 5px #dbdbdb;
+    }
+    .login_left img{
+      width: 120px;
+    }
+    .login_right {
+      width: 300px;
+      padding-left: 40px;
+      position: relative;
+    }
+    .login_right .form_line {
+      height: 60px;
+      line-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .login_right .form_line span {
+      width: 60px;
+    }
+    .login_right .form_line input {
+      width: 200px;
+      padding: 0 10px;
+      height: 26px;
+      border:1px solid #6e6e6e;
+      outline: none;
+      font-size: 16px;
+    }
+    .btn {
+      height: 80px;
+      line-height: 80px;
+    }
+    .btn button {
+      width: 100%;
+      background: rgb(64,158,255);
+      cursor: pointer;
+      color: #fff;
+      border: none;
+      outline: none;
+      height: 40px;
+      font-size: 16px;
+    }
+    .err_line {
+      position: absolute;
+      left: 40px;
+      font-size: 14px;
+      top: 115px;
+      color: #ff0010;
+    }
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 50px;
+      background: #343536;
+      text-align: center;
+      line-height: 50px;
+      font-size: 14px;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p>九星金融平台运营后台</p>
+  </header>
+  <div class="login" id="login">
+    <div class="login_left">
+      <img src="./logo.png" alt="" onclick="location.href = 'https://www.ninstarscf.com'" style="cursor: pointer;">
+    </div>
+    <div class="login_right">
+      <div class="form_line">
+        <span>账号</span>
+        <input type="text" id='acconnt'>
+      </div>
+      <div class="form_line">
+        <span>密码</span>
+        <input type="password" id='pwd'>
+      </div>
+      <div class="err_line"></div>
+      <div class="btn">
+        <button type="button" id="btn" onclick="login()">登&nbsp;陆</button>
+      </div>
+    </div>
+  </div>
+  <footer>CopyRight © 2017 - 2018 九星数宇网络科技有限公司版权所有</footer>
+  <!-- <div class="login" id="logined"></div> -->
+  <script>
+    let login = function () {
+      $('.err_line').text('')
+      if ($('#acconnt').val() === '') {
+        $('.err_line').text('请输入账号')
+      } else {
+        if ( $('#pwd').val() === '') {
+          $('.err_line').text('请输入密码')
+        } else {
+          let url = ''
+          location.href.indexOf('localhost') > 0 ? url = 'http://localhost:3001' : url = 'http://127.0.0.1:3001'
+          $.ajax({
+            method: 'POST',
+            data: {uname: $('#acconnt').val(), pwd: $('#pwd').val()},
+            // url: 'http://127.0.0.1:3001/admin/login',
+            url: url + '/admin/login',
+            success: function (res) {
+              console.log(res)
+              if (res.code === 1) {
+                // console.log(localStorage)
+                localStorage.uid = res.uid
+                location.href = 'http://127.0.0.1:3000'
+              } else {
+                $('.err_line').text(res.errMsg)
+              }
+            }
+          })
+        }
+      }
+    }
+    window.onload = function () {
+      if (localStorage.uid) {
+        location.href = 'http://127.0.0.1:3000'
+        // document.getElementById('login').style.display = 'flex' 
+      } else {
+        document.getElementById('login').style.display = 'flex' 
+      }
+    }
+    $('body').keydown(function(e) {
+      /* Act on the event */
+      // console.log(e.key)
+      if (e.key === 'Enter') {
+        login()
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+html,body {
+  width: 100%;
+  height: 100%;
+}
+.dash_board {
+  position: relative;
+  width: 100%;
+  height: 20%;
+  background: #4CAF50;
+  margin-bottom: 20px;
+}
+.dash_board .star_wrap {
+  position: absolute;
+  bottom: -8px;
+  width: 45px;
+  height: 45px;
+  right: 15px;
+  transform: rotateZ(16deg);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container {
+  margin: 0 20px;
+}
+.section {
+  padding: 20px 0;
+  margin: 20px 10px;
+  border-bottom: 1px dashed #eee;
+}
+.section a {
+  color: #388E3C;
+}
+.section input[type=submit] {
+  color: #fff;
+  width: 85px;
+  height: 28px;
+  border: none;
+  background: #388E3C;
+  display: block;
+  margin-top: 16px;
+}
+.section input[type=text] {
+  width: 240px;
+  margin-top: 15px;
+  display: block;
+  height: 24px;
+  padding: 3px;
+  outline: none;
+  border: 1px solid #dadada;
+  border-radius: 2px;
+}
+p.desc {
+  margin: 15px;
+  color: #666;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/index.css' />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <div class="dash_board">
+      <div class="star_wrap" onmouseenter="handleRotate(this, 1)" onmouseleave="handleRotate(this, 0)">
+        <img src="/images/index/star.png" alt="">
+      </div>
+    </div>
+    <div class="container">
+      <h1><%= title %></h1>
+      <div class="section">
+       <h4>爬取《一个》app 文章</h4>
+  	    <form action="/" method="post">
+  	    	<input type="text" name="id" placeholder="输入id查看文章" required>
+  	    	<input type="submit">
+  	    </form>
+      </div>
+      <div class="section">
+      	<h4>数据分析</h4>
+  			<p class="desc">原生sql获取数据，计算后返回，使用Echarts展示</p>
+  			<a href="/chart">查看</a>
+      </div>
+    </div>
+    <script type="text/javascript">
+      let handleRotate = function (e, sw) {
+        if (sw) {
+          e.style.transition = 'all .3s';
+          e.style.transform = 'rotateZ(125deg)'
+        } else {
+          e.style.transform = 'rotateZ(16deg)';
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<table>
+		<% for (var i = 0; i < info.length; i++) { %>
+			<tr>
+				<td><%=info[i].id %></td>
+				<td><%=info[i].name %></td>
+				<td><%=info[i].city %></td>
+				<td><%=info[i].bank_branch %></td>
+			</tr>
+		<% } %>
+	</table>
+</body>
+</html>

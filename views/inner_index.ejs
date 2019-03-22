@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title><%=title%></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src='/javascripts/jquery.min.js'></script>
+	<style>
+	* {
+		margin: 0;
+		padding: 0;
+	}
+	body {
+		/* padding: 0 30px; */
+		margin: 26px 0;
+		transition: all 1s;
+	}
+	.container {
+		margin: 0 30px;
+	}
+	p {
+		line-height: 2.0;
+		color: #222;
+	}
+	h3 {
+		margin: 20px;
+	}
+	.null img {
+		padding: 0 30px;
+	}
+	.null {
+		color:  #999;
+		/* width: 316px; */
+		margin: 15px 0;
+		line-height: 2.4;
+		text-align: center;
+		margin: 0 auto;
+	}
+	.top {
+		position: fixed;
+		width: 45px;
+		height: 45px;
+		background: #4CAF50;
+		color: #fff;
+		text-align: center;
+		line-height: 45px;
+		font-weight: bolder;
+		font-size: 32px;
+		border-radius: 50%;
+		right: 6px;
+		bottom: 80px;
+	}
+	</style>
+</head>
+<body>
+	<%if (data.length !== 0){%>
+		<div class="top" onclick="handleTop(this)">
+			<img src="/images/articel/top.svg" alt="">
+		</div>
+		<h3><%=title%></h3>
+	<%}%>
+	<div class="container">
+		<% for (var i = 0; i< data.length; i++){ %>
+			<%- data[i]%>
+		<%}%>
+		<%if (data.length === 0){%>
+			<div class='null'>
+				<img src="/images/null.png" alt="">
+				<div>文章还没写出来或者就是找不到了。。。。</div>
+			</div>
+		<%}%>
+	</div>
+	<script>
+		window.onload = function (e) {
+			var arr = <%- JSON.stringify(data) %>
+			let cookie = document.cookie
+			let cookieStr = cookie.substring(cookie.indexOf('bookmarks:'), cookie.indexOf('/n'))
+			let marker = localStorage.marker
+			if (marker) {
+				let m = JSON.parse(marker)
+				let id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1, window.location.pathname.length)
+				m.forEach(val => {
+					if (val.id === id) {
+						console.log(val)
+						$(window).scrollTop(val.offse)
+						return false
+					}
+				})
+			}
+
+		}
+		let handleTop = function (e) {
+			e.style.background = '#388E3C';
+			$(window).scrollTop(0)
+			setTimeout(() => {
+				e.style.background = '#4CAF50';
+			}, 200)
+		}
+		$('.container>p').on({
+			touchstart: function(e) {
+				// 长按事件触发
+				timeOutEvent = setTimeout(function() {
+						timeOutEvent = 0
+						let str = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1, window.location.pathname.length)
+						let marker = []
+						if (localStorage.marker) {
+							if (Array.isArray(JSON.parse(localStorage.marker))) {
+								marker = JSON.parse(localStorage.marker)
+							}
+						}
+						let hasAdd = false
+						let obj = {id: str, offset: $(window).scrollTop(), cr_t: new Date().getTime(), view_height: $(document).height()}
+						marker.forEach((val) => {
+							if (val.id === obj.id) {
+								hasAdd = true
+								val = obj
+							}
+						})
+						if (!hasAdd) {
+							marker.push(obj)
+						}
+						localStorage.marker = JSON.stringify(marker)
+						document.cookie = `bookmarks={"list":` + JSON.stringify(marker) + ', "http":true}'
+						alert('添加书签成功')
+				}, 600);
+				//长按400毫秒
+				// e.preventDefault();
+			},
+			touchmove: function() {
+				clearTimeout(timeOutEvent);
+				timeOutEvent = 0;
+			}
+		})
+	</script>
+</body>
+</html>

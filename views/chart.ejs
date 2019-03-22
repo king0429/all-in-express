@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>chart</title>
+	<script src='/javascripts/echarts.min.js'></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		body {
+			padding: 0 20px;
+			margin: 26px 0;
+		}
+		p {
+			line-height: 2.0;
+			color: #222;
+		}
+		h3 {
+			margin: 20px 0;
+		}
+		#order_list {
+			width: 95%;
+			margin: 0 auto;
+			height: 600px;
+		}
+		.clo-2 {
+			display: flex;
+			height: 450px;
+		}
+		#paid, #finished {
+			width: 100%;
+			height: 100%
+		}
+	</style>
+</head>
+<body>
+	<h3>图表（数据分析）</h3>
+	<div id="order_list">
+	</div>
+	<div class="clo-2">
+		<div id="paid"></div>
+		<div id="finished"></div>
+	</div>
+	<script>
+		window.onload = function () {
+			// 检测屏幕方向
+			// var mql = window.matchMedia("(orientation: portrait)")
+			// if (mql.matches) {}
+			const data = <%-JSON.stringify(list)%>
+			const months = <%-JSON.stringify(months)%>
+			const contracts = <%-JSON.stringify(contracts)%>
+			const invoices = <%-JSON.stringify(invoices)%>
+			const payments = <%-JSON.stringify(payments)%>
+			const paid = <%-JSON.stringify(paid)%>
+			const finished = <%-JSON.stringify(finished)%>
+			let payArr = [{name: '未支付', value: paid.unpaid}, {name: '已支付', value: paid.paid}]
+			let finishArr = [{name: '未完成', value: finished.unfinished}, {name: '已完成', value: finished.finished}]
+			const dom = document.getElementById("order_list")
+			// 声明折线图
+			var myChart = echarts.init(dom)
+			let option = {
+				title: {
+					text: '2018单据创建分布图'
+				},
+				legend: {
+					show: true,
+					type: 'plain',
+					z: '1000',
+					left: 'center',
+          top: 5,
+		      data:[
+		      	{name: '订单'},
+		      	{name: '合同'},
+		      	{name: '发票'}
+		      ]
+		    },
+			  tooltip: {
+		      trigger: 'axis'
+		    },
+		    xAxis: {
+		    	name: '2018年',
+	        type: 'category',
+	        data: months.map(val => val + '月')
+		    },
+		    yAxis: {
+		    	name: '单据数量',
+		      type: 'value'
+		    },
+		    // #7498f7 蓝色 #eec557 黄色 #f3655d 红色 #44e9a7 绿色
+		    series: [
+		    	{
+			    	name: '合同数量',
+		        data: contracts,
+		        type: 'line',
+		        color: '#eec557'
+			    },
+			    {
+			    	name: '订单数量',
+		        data: data,
+		        type: 'line',
+		        color: '#7498f7'
+			    },
+			    {
+			    	name: '发票数量',
+			    	data: invoices,
+			    	type: 'line',
+			    	color: '#f3655d'
+			    },
+			    {
+			    	name: '支付数量',
+			    	data: payments,
+			    	type: 'line',
+			    	color: '#44e9a7'
+			    }
+		    ]
+			}
+			// 声明发票支付饼图
+			const domRing = document.getElementById("paid")
+			var myChartRing = echarts.init(domRing)
+			let optionRing = {
+				title: {
+					text: '2018发票支付占比'
+				},
+				legend: {
+					show: true,
+					type: 'plain',
+					z: '1000',
+					left: 'center',
+          top: 5,
+		      data:[
+		      	{name: '订单'},
+		      	{name: '合同'},
+		      	{name: '发票'}
+		      ]
+		    },
+		    // #7498f7 蓝色 #eec557 黄色 #f3655d 红色 #44e9a7 绿色
+		    color: ['#7498f7', '#f3655d'],
+			  tooltip: {
+	        trigger: 'item',
+	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    series: [
+			    {
+			    	name: '发票支付情况',
+			    	type: 'pie',
+		        radius: '55%',
+		        data: payArr
+			    }
+		    ]
+			}
+			// 声明订单完成情况
+			const domFinish = document.getElementById("finished")
+			var myFinish = echarts.init(domFinish)
+			let optionFinish = {
+				title: {
+					text: '2018订单完成情况'
+				},
+			  tooltip: {
+	        trigger: 'item',
+	        formatter: "{a} <br/>{b} : {c} ({d}%)"
+		    },
+		    // #7498f7 蓝色 #eec557 黄色 #f3655d 红色 #44e9a7 绿色
+		    color: ['#7498f7', '#eec557'],
+		    series: [
+			    {
+			    	name: '订单完成情况',
+			    	type: 'pie',
+		        radius: '55%',
+		        data: finishArr
+			    }
+		    ]
+			}
+			if ((option && typeof option === "object") && (optionRing && typeof optionRing === "object") && (optionFinish && typeof optionFinish === "object")) {
+			  myChart.setOption(option, true);
+			  myChartRing.setOption(optionRing, true)
+			  myFinish.setOption(optionFinish, true)
+			}
+		}
+	</script>
+</body>
+</html>
