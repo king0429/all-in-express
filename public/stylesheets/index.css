@@ -2,6 +2,9 @@
   margin: 0;
   padding: 0;
 }
+input:required:valid{
+  color: red
+}
 html,body {
   width: 100%;
   height: 100%;
@@ -16,7 +19,9 @@ h4 {
   position: relative;
   width: 100%;
   height: 19%;
-  background: #4CAF50;
+  background: #4CAF50 url('/images/index/bg.png') no-repeat;
+  /* background-size: 100% 19%; */
+  background-position: 87% 76%;
   margin-bottom: 20px;
 }
 .dash_board h1 {
