@@ -2,10 +2,12 @@
 var express = require('express');
 var router = express.Router();
 
-
 const indexModule = require('../modules/index').index
 const chartModule = require('../modules/index').chart
 const sqiderModule = require('../modules/index').sqider
+const weiboFileModule = require('../modules/file').weiboFile
+const getBusinessModule = require('../modules/file').getBusiness
+const clearTableModule = require('../modules/file').clearTable
 // var graphqlHTTP = require('express-graphql');
 // var { buildSchema } = require('graphql');
 
@@ -45,5 +47,12 @@ router.route('/chart')
 // 爬虫页面路由
 router.route('/spider/:id')
 	.get(sqiderModule.index)
+
+// 文件存储页面
+router.route('/file').get(function (req, res, next) {
+	res.render('file')
+}).post(weiboFileModule).put(getBusinessModule)
+
+router.route('/delete_table').get(clearTableModule)
 
 module.exports = router;

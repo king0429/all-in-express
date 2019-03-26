@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>获取微博视频</title>
+  <script src='/javascripts/jquery.min.js'></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0
+    }
+    body {
+      width: 100%;
+      height: 100%;
+    }
+    .form {
+      padding: 36px 0;
+      width: 85%;
+      height: 400px;
+      margin: 0 auto;
+      color: #212121;
+    }
+    .line {
+      position: relative;
+    }
+    .line div {
+      position: absolute;
+      top: 100px;
+      color: #F44336;
+      font-size: 14px;
+      left: 20px;
+    }
+    .line p {
+      color: #212121;
+      line-height: 42px;
+      font-size: 20px;
+    }
+    .line input {
+      display: block;
+      width: calc(100% - 40px);
+      height: 30px;
+      margin: 20px;
+      margin-top: 10px;
+      padding: 0 5px;
+      border: none;
+      border-bottom: 2px solid #bdbdbd;
+      background: none;
+      outline: none;
+      color: #757575;
+      font-size: 20px;
+      transition: border .2s ease-out;
+    }
+    .line input:focus {
+      border-bottom: 2px solid #388E3C;
+    }
+    .btn {
+      padding: 16px 0;
+      text-align: center;
+    }
+    .btn button {
+      margin: 0 auto;
+      width: 90px;
+      height: 32px;
+      background: #bdbdbd;
+      color: #fff;
+      border: none;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="form">
+    <div class="line">
+      <p>输入微博链接</p>
+      <input type="text" name="weiboUrl" value="http://b2b.huangye88.com/beijing/kaifaruanjian1729/">
+      <div class="tip"></div>
+    </div>
+    <div class="btn">
+      <button type="button" name="button">查看</button>
+      <button type="button" name="button">获取</button>
+    </div>
+  </div>
+  <div id='responeHtml'></div>
+  <div class="vidoe">
+    <video src=""></video>
+  </div>
+  <div class="null">
+    <p>未找到相关视频</p>
+  </div>
+  <script type="text/javascript">
+    $('input[name=weiboUrl]').on('input', function () {
+      if ($('input[name=weiboUrl]').val() !== '') {
+        $('.btn').children('button').css('background', '#388E3C')
+      }
+    }).on('blur', function () {
+      if ($('input[name=weiboUrl]').val() === '') {
+        $('.btn').children('button').css('background', '#bdbdbd')
+      }
+    })
+    $('.btn').children('button').eq(0).on('click', function () {
+      $('.tip').hide()
+      let url = $('input[name=weiboUrl]').val()
+      let urlReg = /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/
+      if (!urlReg.test(url)) {
+        $('.tip').text('请输入正确的微博链接').show()
+      } else {
+        $.ajax({
+          url: '/file',
+          method: 'POST',
+          data: {url},
+          success: function (res) {
+            $('#responeHtml').html(res.html)
+            console.log(res)
+          },
+          fail: function (err) {
+            console.log(err)
+          }
+        })
+      }
+    })
+    $('.btn').children('button').eq(1).on('click', function () {
+      // console.table()
+      let list = []
+      // $('#jubao').find('dl').forEach((val, index) => {
+      //   arr.push({
+      //     name: val.find('h4 a').text(),
+      //     phone: val.find('.tal a').text()
+      //   })
+      // })
+      for (let i = 0; i <= $('#jubao').find('dl').length; i++) {
+        if ($('#jubao').find('dl').eq(i).attr('onmouseover')) {
+          list.push({
+            name: $('#jubao').find('dl').eq(i).find('h4 a').text(),
+            phone: $('#jubao').find('dl').eq(i).find('dt span a').text(),
+            address: $('#jubao').find('dl').eq(i).find('dd').eq(1).children('span').eq(0).text() === '(举报)' ? '' : $('#jubao').find('dl').eq(i).find('dd').eq(1).children('span').eq(0).text()
+          })
+        }
+      }
+      console.log(list)
+      $.ajax({
+        url: '/file',
+        method: 'PUT',
+        data: {listStr: JSON.stringify(list)},
+        // traditional: true,
+        // headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        dataType: "json",
+        success: function (res) {
+          // $('#responeHtml').html(res.html)
+          console.log(res.body)
+        },
+        fail: function (err) {
+          console.log(err)
+        }
+      })
+
+    })
+  </script>
+</body>
+</html>
