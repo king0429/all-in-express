@@ -13,6 +13,7 @@ module.exports = {
       }
     })
   },
+  // 爬虫企业目录存储
   getBusiness: function (req, res, next) {
     let objQuery = JSON.parse(req.body.listStr)
     if (Array.isArray(objQuery)) {
@@ -35,6 +36,7 @@ module.exports = {
       res.send({code: 0, body: req.body})
     }
   },
+  // 清楚表中重复的企业
   clearTable: function (req, res, next) {
     let tname = req.query.name || 'spider_business'
     mysql.query(`select name, GROUP_CONCAT(phone) as phone, GROUP_CONCAT(address) as address from ${tname} GROUP BY name;`, function (err, data) {
