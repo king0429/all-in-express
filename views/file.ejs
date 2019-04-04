@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>获取微博视频</title>
+  <title>所搜</title>
   <script src='/javascripts/jquery.min.js'></script>
   <style>
     * {
@@ -17,145 +17,260 @@
     }
     .form {
       padding: 36px 0;
-      width: 85%;
-      height: 400px;
+      width: 90%;
       margin: 0 auto;
       color: #212121;
-    }
-    .line {
       position: relative;
     }
-    .line div {
+    .form .tip {
+      color: #ff0011;
       position: absolute;
       top: 100px;
-      color: #F44336;
-      font-size: 14px;
-      left: 20px;
+      left: 12%;
     }
-    .line p {
-      color: #212121;
-      line-height: 42px;
-      font-size: 20px;
+    .btn {
+      display: flex;
+      justify-content: center;
+      margin: 16px 0 46px 0;
     }
-    .line input {
-      display: block;
-      width: calc(100% - 40px);
-      height: 30px;
-      margin: 20px;
-      margin-top: 10px;
+    .btn input {
+      width: 45%;
+      height: 40px;
       padding: 0 5px;
       border: none;
-      border-bottom: 2px solid #bdbdbd;
+      border: 1px solid #bdbdbd;
+      border-right: none;
       background: none;
       outline: none;
-      color: #757575;
+      color: #212121;
       font-size: 20px;
       transition: border .2s ease-out;
     }
-    .line input:focus {
-      border-bottom: 2px solid #388E3C;
-    }
-    .btn {
-      padding: 16px 0;
-      text-align: center;
+    .btn input:focus {
+      border: 1px solid #388E3C;
+      border-right: none;
     }
     .btn button {
-      margin: 0 auto;
-      width: 90px;
-      height: 32px;
-      background: #bdbdbd;
+      width: 110px;
+      height: 42px;
+      background: #388E3C;
       color: #fff;
-      border: none;
+      border: 1px solid #388E3C;
       outline: none;
+      cursor: pointer;
+    }
+    .show_view {
+      overflow: hidden;
+      min-height: 400px;
+      width: 100%;
+    }
+    .search_res {
+      width: 60%;
+      float: left;
+      padding: 0 1%;
+      font-size: 14px;
+    }
+    .hotkeys {
+      float: right;
+      width: 35%;
+    }
+    .hotkeys ul li {
+      padding: 6px 12px;
+      list-style: none;
+      color: rgba(0, 150, 136, .83);
+      margin-right: 15px;
+      border-radius: 2px;
+      margin-top: 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .hotkeys ul li span:first-child {
+      color: #666;
+      margin-right: 5px;
+    }
+    .hotkeys ul li span:last-child {
+      cursor: pointer;
+    }
+    .hotkeys ul li span:last-child:hover {
+      color: rgba(0,150,136, 1);
+      text-decoration: underline;
+    }
+    .hotkeys p {
+      line-height: 30px;
+    }
+    .inner_res {
+      padding: 0 10px;
+      height: 45px;
+      color: #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #dadada;
+      cursor: pointer;
+      transition: all .15s ease-in;
+    }
+    .inner_res img {
+      width: 16px;
+    }
+    .inner_res:hover {
+      color: #388E3C;
+      box-shadow: 2px 2px 5px 5px #bdbdbd;
+    }
+    .null_res {
+      text-align: center;
+    }
+    .null_res p {
+      line-height: 40px;
+    }
+    .null_tip {
+      color: #999;
+    }
+    .line_title {
+      font-weight: bold;
+      color: #666;
+    }
+    .search_res div p {
+      line-height: 36px;
+      color: #333;
+    }
+    .search_res .business_name {
+      margin: 16px 0;
+      font-weight: bold;
+      color: #388E3C;
+      font-size: 16px;
+      border-bottom: 1px dashed #bdbdbd;
+    }
+    .reback {
+      color: #999;
+      display: flex;
+      align-items: center;
+    }
+    .reback img {
+      transform: rotate(180deg);
+      cursor: pointer;
+    }
+    .reback span {
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div class="form">
-    <div class="line">
-      <p>输入微博链接</p>
-      <input type="text" name="weiboUrl" value="http://b2b.huangye88.com/beijing/kaifaruanjian1729/">
-      <div class="tip"></div>
-    </div>
     <div class="btn">
-      <button type="button" name="button">查看</button>
-      <button type="button" name="button">获取</button>
+      <input type="text" name="keyword" autocomplete="off" placeholder="输入要搜索的企业">
+      <button type="button" name="button">搜索</button>
     </div>
+    <div class="tip"></div>
   </div>
-  <div id='responeHtml'></div>
-  <div class="vidoe">
-    <video src=""></video>
-  </div>
-  <div class="null">
-    <p>未找到相关视频</p>
+  <div class="show_view">
+    <div class="search_res">
+      <ul></ul>
+      <div style="display: none"></div>
+    </div>
+    <div class="hotkeys">
+      <p>当前搜索排名</p>
+      <ul>
+        <%for (let i = 0; i <= hotwords.length - 1; i++) {%>
+          <li onclick="handleHot(this)">
+            <span><%= i + 1%></span>
+            <span><%=hotwords[i].name%></span>
+          </li>
+        <%}%>
+      </ul>
+    </div>
   </div>
   <script type="text/javascript">
-    $('input[name=weiboUrl]').on('input', function () {
-      if ($('input[name=weiboUrl]').val() !== '') {
-        $('.btn').children('button').css('background', '#388E3C')
-      }
-    }).on('blur', function () {
-      if ($('input[name=weiboUrl]').val() === '') {
-        $('.btn').children('button').css('background', '#bdbdbd')
-      }
-    })
-    $('.btn').children('button').eq(0).on('click', function () {
-      $('.tip').hide()
-      let url = $('input[name=weiboUrl]').val()
-      let urlReg = /(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?/
-      if (!urlReg.test(url)) {
-        $('.tip').text('请输入正确的微博链接').show()
+    let initDOM = function () {
+      $('.null_res').hide()
+      $('.search_res').show()
+      $('.search_res ul').html('').show()
+      $('.search_res div').html('').hide()
+    }
+    // 点击搜索按钮搜索
+    $('.btn').find('button').eq(0).click(function (e) {
+      initDOM()
+      $('.tip').text('')
+      if ($('input[name=keyword]').val() === '') {
+        $('.tip').text('请输入要搜索的关键词')
       } else {
         $.ajax({
-          url: '/file',
           method: 'POST',
-          data: {url},
+          url: '/file',
+          data: {keyword: $('input[name=keyword]').val()},
           success: function (res) {
-            $('#responeHtml').html(res.html)
-            console.log(res)
-          },
-          fail: function (err) {
-            console.log(err)
+            if (res.data.length !== 0) {
+              res.data.forEach((val, index) => {
+                $('.search_res ul').append(`<li class='inner_res' se-key=${index} se-did="${val.legal_person_id}" onclick="handleDetail(this)">
+                  <span>${val.name}</span>
+                  <img src='/images/icon/forword.png'>
+                </li>`)
+              })
+            } else {
+              $('.search_res ul').append('<li class="null_res"><img src="/images/null.png" /><p>没有找到相应的结果</p></li>')
+            }
           }
         })
       }
     })
-    $('.btn').children('button').eq(1).on('click', function () {
-      // console.table()
-      let list = []
-      // $('#jubao').find('dl').forEach((val, index) => {
-      //   arr.push({
-      //     name: val.find('h4 a').text(),
-      //     phone: val.find('.tal a').text()
-      //   })
-      // })
-      for (let i = 0; i <= $('#jubao').find('dl').length; i++) {
-        if ($('#jubao').find('dl').eq(i).attr('onmouseover')) {
-          list.push({
-            name: $('#jubao').find('dl').eq(i).find('h4 a').text(),
-            phone: $('#jubao').find('dl').eq(i).find('dt span a').text(),
-            address: $('#jubao').find('dl').eq(i).find('dd').eq(1).children('span').eq(0).text() === '(举报)' ? '' : $('#jubao').find('dl').eq(i).find('dd').eq(1).children('span').eq(0).text()
-          })
-        }
+    // 属于换取关键词
+    $('input[name=keyword]').bind('input propertychange', function (e) {})
+    // 点击查看详情
+    $('search_res').find('li').click(function (e) {
+    })
+    let handleDetail = function (e) {
+      $('.search_res').children('div').hide()
+      $('.search_res').children('ul').show()
+      let id = $(e).attr('se-did')
+      if (id === 'null') {
+        alert('无详细信息')
+      } else {
+        $.ajax({
+          method: 'GET',
+          url: '/legal_person',
+          data: {id},
+          success: function (res) {
+            $('.search_res').find('ul').hide()
+            $('.search_res').find('div').html(`
+              <div class='reback'><img src="/images/icon/forword.png" alt="" onclick='handleHide()'><span onclick='handleHide()'>返回</span></div>
+              <p class='business_name'>${res.data.name}</p>
+              <div><span class='line_title'>邮箱：</span><p>${res.data.email || '<span class="null_tip">未填写</span>'}</p></div>
+              <div><span class='line_title'>传真：</span><p>${res.data.fax || '<span class="null_tip">未填写</span>'}</p></div>
+              <div><span class='line_title'>地址：</span><p>${res.data.address || '<span class="null_tip">未填写</span>'}</p></div>
+            `).show()
+          }
+        })
       }
-      console.log(list)
+    }
+    // 返回
+    let handleHide = () => {
+      $('.search_res').find('ul').show()
+      $('.search_res').find('div').html('')
+    }
+    // 点击热词搜索
+    let handleHot = (e) => {
+      initDOM()
+      $('.tip').text('')
+      let keyword = $(e).find('span').eq(1).text()
       $.ajax({
+        method: 'POST',
         url: '/file',
-        method: 'PUT',
-        data: {listStr: JSON.stringify(list)},
-        // traditional: true,
-        // headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        dataType: "json",
+        data: {keyword},
         success: function (res) {
-          // $('#responeHtml').html(res.html)
-          console.log(res.body)
-        },
-        fail: function (err) {
-          console.log(err)
+          $('input[name=keyword]').val(keyword)
+          if (res.data.length !== 0) {
+            res.data.forEach((val, index) => {
+              $('.search_res ul').append(`<li class='inner_res' se-key=${index} se-did=${val.detail_id} onclick="handleDetail(this)">
+                <span>${val.name}</span>
+                <img src='/images/icon/forword.png'>
+              </li>`)
+            })
+          } else {
+            $('.search_res ul').append('<li class="null_res"><img src="/images/null.png" /><p>没有找到相应的结果</p></li>')
+          }
         }
       })
-
-    })
+    }
   </script>
 </body>
 </html>

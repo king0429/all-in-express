@@ -8,6 +8,9 @@ const sqiderModule = require('../modules/index').sqider
 const weiboFileModule = require('../modules/file').weiboFile
 const getBusinessModule = require('../modules/file').getBusiness
 const clearTableModule = require('../modules/file').clearTable
+const getSearchModule = require('../modules/search').getSearchModule
+const searchModule = require('../modules/search').searchModule
+const getLegalperson = require('../modules/business').getLegalperson
 // var graphqlHTTP = require('express-graphql');
 // var { buildSchema } = require('graphql');
 
@@ -49,9 +52,10 @@ router.route('/spider/:id')
 	.get(sqiderModule.index)
 
 // 文件存储页面
-router.route('/file').get(function (req, res, next) {
-	res.render('file')
-}).post(weiboFileModule).put(getBusinessModule)
+router.route('/file').get(getSearchModule).post(searchModule)
+
+// 企业信息相关
+router.route('/legal_person').get(getLegalperson)
 
 router.route('/delete_table').get(clearTableModule)
 

@@ -1,10 +1,12 @@
 const mysql = require('../database/mysql')
 const { getA } = require('../spider')
 let { $initMonth, $sql_format_time } = require('../common/util')
+const redis = require('../database/redis')
 // console.log($query.find('api_chain', null, 'limit 15'))
 // 首页表单
 exports.index = {
 	index_get: function (req, res) {
+		console.log(redis)
 		res.render('index', {title: 'nodeJS'})
 	},
 	index_post: function (req, res) {
@@ -83,7 +85,6 @@ exports.chart = {
 		})
 	}
 }
-
 
 // 爬虫文章结果路由
 exports.sqider = {
