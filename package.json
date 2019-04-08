@@ -19,6 +19,7 @@
     "mysql": "^2.16.0",
     "nedb-session-store": "^1.1.2",
     "redis": "^2.8.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "socket.io": "^2.2.0"
   }
 }

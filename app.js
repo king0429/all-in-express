@@ -7,7 +7,10 @@ var logger = require('morgan');
 var sesstion = require('./cache/index.js')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/wx_api');
-var adminRouter = require('./routes/admin')
+var adminRouter = require('./routes/admin');
+
+// var socketURL = require('./routes/socket')
+
 // graphQL
 // var { buildSchema } = require('graphql');
 // var graphqlHTTP = require('express-graphql');
@@ -48,6 +51,8 @@ app.use('/', indexRouter);
 app.use('/wx_api', usersRouter);
 app.use('/admin', adminRouter);
 
+// app.use('/socket', socketURL)
+
 // app.use('/', graphqlHTTP({
 //   schema: schema,
 //   rootValue: root,
@@ -72,5 +77,4 @@ app.use(function(err, req, res) {
   res.status(err.status || 500);
   res.render('error');
 });
-
 module.exports = app;

@@ -5,12 +5,13 @@ var router = express.Router();
 const indexModule = require('../modules/index').index
 const chartModule = require('../modules/index').chart
 const sqiderModule = require('../modules/index').sqider
-const weiboFileModule = require('../modules/file').weiboFile
-const getBusinessModule = require('../modules/file').getBusiness
+// const weiboFileModule = require('../modules/file').weiboFile
+// const getBusinessModule = require('../modules/file').getBusiness
 const clearTableModule = require('../modules/file').clearTable
 const getSearchModule = require('../modules/search').getSearchModule
 const searchModule = require('../modules/search').searchModule
 const getLegalperson = require('../modules/business').getLegalperson
+const getWikiModule = require('../modules/wiki').getWikiModule
 // var graphqlHTTP = require('express-graphql');
 // var { buildSchema } = require('graphql');
 
@@ -56,6 +57,9 @@ router.route('/file').get(getSearchModule).post(searchModule)
 
 // 企业信息相关
 router.route('/legal_person').get(getLegalperson)
+
+// 使用websockit的 wiki页面
+router.route('/wiki').get(getWikiModule)
 
 router.route('/delete_table').get(clearTableModule)
 
