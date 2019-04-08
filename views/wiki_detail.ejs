@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src='/javascripts/jquery.min.js'></script>
+  <title><%=data.title%></title>
+</head>
+<body>
+  <h3><%=data.title%></h3>
+  <p><%=data.info%></p>
+  <p><%=data.author ? data.author : '匿名'%></p>
+  <p><%=data.show_date%></p>
+    <%for (let i = 0; i<= data.wiki.length - 1; i++){%>
+      <span><%=i + 1%></span>
+      <ul>
+        <li><%=data.wiki[i].title%></li>
+        <li><%=data.wiki[i].info%></li>
+        <li><%=data.wiki[i].show_date%></li>
+        <li>
+          <img src="/images/icon/wiki.png" qid="<%=data.wiki[i].id%>" alt="" class='show_goods'>
+          <%=data.wiki[i].goods%>
+        </li>
+      </ul>
+    <%}%>
+  <script type="text/javascript">
+    window.onload = function (e) {
+      let mg = []
+      if (localStorage.mygoods) {
+        mg = JSON.parse(localStorage.mygoods)
+      }
+      let goodImgs = $('.show_goods')
+      for (let i = 0; i <= goodImgs.length - 1; i++){
+        for (let j = 0; j <= mg.length - 1; j++) {
+          if (goodImgs.eq(i).attr('qid') === mg[j].id)  goodImgs.eq(i).attr('src', '/images/icon/ask.png')
+        }
+      }
+    }
+  </script>
+</body>
+</html>

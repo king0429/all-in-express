@@ -2,6 +2,7 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var socketUtil = require('./socket')
 // var bodyParser = require('body-parser');
 var logger = require('morgan');
 var sesstion = require('./cache/index.js')
@@ -9,8 +10,16 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/wx_api');
 var adminRouter = require('./routes/admin');
 
-// var socketURL = require('./routes/socket')
+var WebSocket = require('ws');
+const ws = new WebSocket.Server({port: 3002})
 
+ws.on('connection', function (ws) {
+  ws.on('message', function (e) {
+    if (e === 'getWikiList') {
+      socketUtil.getWikiList(ws)
+    }
+  })
+})
 // graphQL
 // var { buildSchema } = require('graphql');
 // var graphqlHTTP = require('express-graphql');
@@ -23,7 +32,7 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// 简历模型
+// 建立模型
 // var schema = buildSchema(`
 //   type Query {
 //     hello: String,
@@ -50,8 +59,6 @@ app.use(sesstion)
 app.use('/', indexRouter);
 app.use('/wx_api', usersRouter);
 app.use('/admin', adminRouter);
-
-// app.use('/socket', socketURL)
 
 // app.use('/', graphqlHTTP({
 //   schema: schema,
