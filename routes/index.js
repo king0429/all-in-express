@@ -11,7 +11,8 @@ const clearTableModule = require('../modules/file').clearTable
 const {searchModule, getSearchModule} = require('../modules/search')
 const {getLegalperson} = require('../modules/business')
 const {getWikiModule, insertWikiModule, getWikeDetail} = require('../modules/wiki')
-const  {getMessageModule}  = require('../modules/messages')
+const {getMessageModule}  = require('../modules/messages')
+const {getUrlModule, setUrlModule, navigatorModule} = require('../modules/url')
 // var graphqlHTTP = require('express-graphql');
 // var { buildSchema } = require('graphql');
 
@@ -66,5 +67,11 @@ router.route('/wiki/:id').get(getWikeDetail)
 
 // 消息列表分析
 router.route('/message').get(getMessageModule)
+
+// 生成短网址网页
+router.route('/url').get(getUrlModule).post(setUrlModule)
+
+// 短URL跳转
+router.route('/url/:id').get(navigatorModule)
 
 module.exports = router;

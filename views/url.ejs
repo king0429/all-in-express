@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src='/javascripts/jquery.min.js'></script>
+  <title>短路径</title>
+  <style media="screen">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      height: 100%;
+      width: 100%;
+    }
+    body {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      width: 100%;
+    }
+    .tab {
+      width: calc(63% + 134px);
+      margin: 0 auto;
+      padding: 0;
+      display: flex;
+    }
+    .tab li {
+      list-style: none;
+      width: 90px;
+      cursor: pointer;
+      text-align: center;
+      padding: 3px 0;
+    }
+    .tab li.active {
+      border: 1px solid #4CAF50;
+      border-bottom: none;
+      background: #4CAF50;
+      color: #fff;
+    }
+    .line {
+      height: 45px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    select {
+      width: 80px;
+      padding: 0 5px;
+      border-radius: 0;
+      -webkit-border-radius: 0;
+      -moz-border-radius: 0;
+      -khtml-border-radius: 0;
+      -webkit-appearance: none;
+      outline: none;
+    }
+    input {
+      border: 1px solid #4CAF50;
+      padding: 0 6px;
+      width: 63%;
+      outline: none;
+    }
+    button {
+      width: 120px;
+      padding: 0 5px;
+      border: 1px solid #4CAF50;
+      border-radius: 0;
+      -webkit-border-radius: 0;
+      -moz-border-radius: 0;
+      -khtml-border-radius: 0;
+      -webkit-appearance: none;
+      outline: none;
+      background: #4CAF50;
+      color: #FFF;
+    }
+    .err_msg {
+      width: calc(63% + 134px);
+      height: 26px;
+      margin: 0 auto;
+      color: #ff0100;
+      line-height:  26px;
+    }
+    .result {
+      width: calc(63% + 134px);
+      margin: 0 auto;
+      height: 60px;
+    }
+    .outline {
+      line-height: 30px;
+      display: none;
+    }
+    .outline a {
+      color: #4CAF50;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- <select class="select" name="type">
+      <option value="0">转换</option>
+      <option value="1">还原</option>
+    </select> -->
+    <ul class="tab">
+      <li class="active">转换</li>
+      <li>还原</li>
+    </ul>
+    <div class="line">
+      <input type="text" name="url" placeholder="输入网址" autocomplete="off">
+      <button type="button" name="button">生成</button>
+    </div>
+    <p class="err_msg"></p>
+    <div class="result">
+      <div class="outline">
+        <span>原网址：</span>
+        <a href="#" class='ori' target="_blank"></a>
+      </div>
+      <div class="outline">
+        <span>短网址：</span>
+        <a href="#" class='sho' target="_blank"></a>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $('button[name=button]').click(function () {
+      $('.err_msg').text(' ')
+      let val = $('input[name=url]').val()
+      let reg = /^([hH][tT]{2}[pP]:\/\/|[hH][tT]{2}[pP][sS]:\/\/)(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/;
+      if (val === '') {
+        $('.err_msg').text('输入网址')
+      } else {
+        if (!reg.test(val)) {
+          $('.err_msg').text('网址格式不正确')
+        } else {
+            $.ajax({
+              url: '/url',
+              method: 'POST',
+              data: {url: val},
+              success: function (res) {
+                if (res.code === 1) {
+                  $('a.ori').text(res.url).attr('href', res.url)
+                  $('a.sho').text(res.shot_url).attr('href', res.shot_url)
+                  $('.outline').show()
+                } else {
+                  $('.err_msg').text('网络错误')
+                }
+              }
+            })
+        }
+      }
+    })
+  </script>
+</body>
+</html>
