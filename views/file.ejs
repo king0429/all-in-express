@@ -33,10 +33,26 @@
       justify-content: center;
       margin: 16px 0 46px 0;
     }
-    .btn input {
+    .btn div {
       width: 45%;
+      position: relative;
+    }
+    .btn div::after {
+      display: none;
+      position: absolute;
+      content: '';
+      width: 20px;
+      height: 20px;
+      background: url('/images/icon/close.png') no-repeat;
+      background-size: 20px 20px;
+      right: 4px;
+      top: 11px;
+      cursor: pointer;
+    }
+    .btn input {
+      width: calc(100% - 30px);
       height: 40px;
-      padding: 0 5px;
+      padding: 0 28px 0 2px;
       border: none;
       border: 1px solid #bdbdbd;
       border-right: none;
@@ -46,6 +62,14 @@
       font-size: 20px;
       transition: border .2s ease-out;
     }
+    /* .btn img {
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      top: 11px;
+      left: 68.8%;
+      cursor: pointer;
+    } */
     .btn input:focus {
       border: 1px solid #388E3C;
       border-right: none;
@@ -158,7 +182,10 @@
 <body>
   <div class="form">
     <div class="btn">
-      <input type="text" name="keyword" autocomplete="off" placeholder="输入要搜索的企业">
+      <div class="">
+        <input type="text" name="keyword" autocomplete="off" placeholder="输入要搜索的企业">
+      </div>
+      <!-- <img src="/images/icon/close.png" alt=""> -->
       <button type="button" name="button">搜索</button>
     </div>
     <div class="tip"></div>
@@ -187,6 +214,33 @@
       $('.search_res ul').html('').show()
       $('.search_res div').html('').hide()
     }
+    $(window).on('keydown', function (e) {
+      if (e.keyCode === 13) {
+        initDOM()
+        $('.tip').text('')
+        if ($('input[name=keyword]').val() === '') {
+          $('.tip').text('请输入要搜索的关键词')
+        } else {
+          $.ajax({
+            method: 'POST',
+            url: '/file',
+            data: {keyword: $('input[name=keyword]').val()},
+            success: function (res) {
+              if (res.data.length !== 0) {
+                res.data.forEach((val, index) => {
+                  $('.search_res ul').append(`<li class='inner_res' se-key=${index} se-did="${val.legal_person_id}" onclick="handleDetail(this)">
+                    <span>${val.name}</span>
+                    <img src='/images/icon/forword.png'>
+                  </li>`)
+                })
+              } else {
+                $('.search_res ul').append('<li class="null_res"><img src="/images/null.png" /><p>没有找到相应的结果</p></li>')
+              }
+            }
+          })
+        }
+      }
+    })
     // 点击搜索按钮搜索
     $('.btn').find('button').eq(0).click(function (e) {
       initDOM()
@@ -218,6 +272,7 @@
     // 点击查看详情
     $('search_res').find('li').click(function (e) {
     })
+    // 搜索接口
     let handleDetail = function (e) {
       $('.search_res').children('div').hide()
       $('.search_res').children('ul').show()
@@ -271,6 +326,14 @@
         }
       })
     }
+    // 出现隐藏清空按钮
+    $('input[name=keyword]').focus(function(e) {
+      console.log(e)
+      console.log($('.btn').find('div').after())
+      if ($(this).val() !== '') {
+        $('.btn').find('div::after')
+      }
+    })
   </script>
 </body>
 </html>

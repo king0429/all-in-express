@@ -6,21 +6,145 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src='/javascripts/jquery.min.js'></script>
   <title><%=data.title%></title>
+  <style media="screen">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    h3 {
+      padding: 20px;
+      line-height: 1.4;
+      border-bottom: 1px
+    }
+    .question_info {
+      min-height: 120px;
+      line-height: 40px;
+      margin: 20px 15px;
+      padding: 6px 8px;
+      border: 1px solid #bdbdbd;
+      color: #313131;
+      word-break: break-all;
+    }
+    .inner_line {
+      margin: 20px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .inner_line>span:last-child {
+      color: #999;
+    }
+    .inner_user {
+      display: flex;
+      align-items: center;
+      color: #009688;
+    }
+    .inner_user img {
+      width: 24px;
+    }
+    .wiki_list {
+      height: 32px;
+      margin: 0 25px;
+      padding: 0 5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #bdbdbd;
+    }
+    .wiki_list span {
+      font-size: 24px;
+      color: #313131;
+      font-weight: bolder;
+    }
+    .wiki_list button {
+      width: 85px;
+      height: 26px;
+      line-height: 26px;
+      color: #fff;
+      margin: 0;
+      border: none;
+      background: #009688;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .wiki_list button:hover {
+
+    }
+    .wiki_item {
+      margin: 0 25px;
+      padding: 5px;
+      border-bottom: 1px dashed #bdbdbd;
+    }
+    .wiki_item li {
+      margin: 10px 0;
+      list-style: none;
+    }
+    .wiki_title {
+      background: url('/images/wiki/title.png') no-repeat;
+      line-height: 1.8;
+    }
+    .wiki_title span {
+      margin-left: 50px;
+    }
+    .wiki_title t {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+    .wiki_info {
+      min-height: 140px;
+      margin: 10px 16px;
+      border: 1px solid #bdbdbd;
+      padding: 8px 5px;
+      line-height: 35px;
+      color: #313131;
+    }
+    .goods {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .goods div {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .goods div img {
+      vertical-align: middle;
+      width: 20px;
+    }
+    .goods>span {
+      color: #999;
+    }
+  </style>
 </head>
 <body>
   <h3><%=data.title%></h3>
-  <p><%=data.info%></p>
-  <p><%=data.author ? data.author : '匿名'%></p>
-  <p><%=data.show_date%></p>
+  <p class='question_info'><%=data.info%></p>
+  <div class="inner_line">
+    <div class="inner_user">
+      <img src="/images/icon/user.png" alt="">
+      <span><%=data.author ? data.author : '匿名'%></span>
+    </div>
+    <span><%=data.show_date%></span>
+  </div>
+    <p class='wiki_list'>
+      <span>Wiki list</span>
+      <button type="button" name="add">添加wiki</button>
+    </p>
     <%for (let i = 0; i<= data.wiki.length - 1; i++){%>
-      <span><%=i + 1%></span>
-      <ul>
-        <li><%=data.wiki[i].title%></li>
-        <li><%=data.wiki[i].info%></li>
-        <li><%=data.wiki[i].show_date%></li>
-        <li>
-          <img src="/images/icon/wiki.png" qid="<%=data.wiki[i].id%>" alt="" class='show_goods'>
-          <%=data.wiki[i].goods%>
+      <ul class="wiki_item">
+        <li class='wiki_title'>
+          <span><t><%=i + 1%>.</t><%=data.wiki[i].title%></span>
+        </li>
+        <li class='wiki_info'><%=data.wiki[i].info%></li>
+        <li class="goods">
+          <div class='set_good'>
+            <img src="/images/icon/good-u.png" qid="<%=data.wiki[i].id%>" alt="" class='show_goods'>
+            <%=data.wiki[i].goods%>
+          </div>
+          <span>
+            <%=data.wiki[i].show_date%>
+          </span>
         </li>
       </ul>
     <%}%>
@@ -33,10 +157,24 @@
       let goodImgs = $('.show_goods')
       for (let i = 0; i <= goodImgs.length - 1; i++){
         for (let j = 0; j <= mg.length - 1; j++) {
-          if (goodImgs.eq(i).attr('qid') === mg[j].id)  goodImgs.eq(i).attr('src', '/images/icon/ask.png')
+          if (goodImgs.eq(i).attr('qid') === mg[j].id)  goodImgs.eq(i).attr('src', '/images/icon/good.png').attr('data-good', '1')
         }
       }
     }
+    $('.set_good').click(function (e) {
+      let _id = $(this).find('img').attr('qid')
+      let isGood = $(this).find('img').attr('src') === '/images/icon/good.png'
+      let goods = []
+      localStorage.mygoods ? goods = JSON.parse(localStorage.mygoods) : goods = []
+      if (isGood) {
+        goods = goods.filter((val) => val.id !== _id)
+        $(this).find('img').attr('src', '/images/icon/good-u.png')
+      } else {
+        goods.push({id: _id, update_time: new Date().getTime()})
+        $(this).find('img').attr('src', '/images/icon/good.png')
+      }
+      localStorage.mygoods = JSON.stringify(goods)
+    })
   </script>
 </body>
 </html>

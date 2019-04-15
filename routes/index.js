@@ -11,6 +11,7 @@ const clearTableModule = require('../modules/file').clearTable
 const {searchModule, getSearchModule} = require('../modules/search')
 const {getLegalperson} = require('../modules/business')
 const {getWikiModule, insertWikiModule, getWikeDetail} = require('../modules/wiki')
+const  {getMessageModule}  = require('../modules/messages')
 // var graphqlHTTP = require('express-graphql');
 // var { buildSchema } = require('graphql');
 
@@ -63,6 +64,7 @@ router.route('/wiki').get(getWikiModule).post(insertWikiModule)
 // wiki详情
 router.route('/wiki/:id').get(getWikeDetail)
 
-router.route('/delete_table').get(clearTableModule)
+// 消息列表分析
+router.route('/message').get(getMessageModule)
 
 module.exports = router;
