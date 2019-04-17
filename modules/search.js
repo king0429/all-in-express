@@ -6,7 +6,6 @@ module.exports = {
       if (err) {
         res.send({code: 0, err})
       } else {
-        console.log(hotwords)
         if (!hotwords) {
           res.render('file', {hotwords: []})
         } else {
@@ -32,7 +31,6 @@ module.exports = {
         obj[key] = {times: 1, last_update_time: new Date().getTime()}
         redis.set('hotwords', JSON.stringify(obj), function (err, res) {
           if (err) {
-            console.log(err)
             res.send({err})
           }
         })
@@ -46,7 +44,6 @@ module.exports = {
         }
         redis.set('hotwords', JSON.stringify(obj), function (err) {
           if (err) {
-            console.log(err)
             res.send({err})
           }
         })

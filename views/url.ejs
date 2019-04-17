@@ -127,30 +127,41 @@
     </div>
   </div>
   <script type="text/javascript">
+    $('.tab li').click(function (e) {
+      $('.tab li').attr('class', '')
+      $(this).attr('class', 'active')
+      let i = $(this).index()
+      i === 0 ? $('button[name=button]').text('生成') : $('button[name=button]').text('还原')
+      $('input[name=url]').val('')
+      $('.err_msg').text(' ')
+      $('.outline').hide()
+    })
     $('button[name=button]').click(function () {
       $('.err_msg').text(' ')
       let val = $('input[name=url]').val()
-      let reg = /^([hH][tT]{2}[pP]:\/\/|[hH][tT]{2}[pP][sS]:\/\/)(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/])+$/;
+      let reg = /^([hH][tT]{2}[pP]:\/\/|[hH][tT]{2}[pP][sS]:\/\/)(([A-Za-z0-9-~]+)\.)+([A-Za-z0-9-~\/:])+$/;
       if (val === '') {
         $('.err_msg').text('输入网址')
       } else {
-        if (!reg.test(val)) {
+        if (!reg.test(val.trim())) {
           $('.err_msg').text('网址格式不正确')
         } else {
-            $.ajax({
-              url: '/url',
-              method: 'POST',
-              data: {url: val},
-              success: function (res) {
-                if (res.code === 1) {
-                  $('a.ori').text(res.url).attr('href', res.url)
-                  $('a.sho').text(res.shot_url).attr('href', res.shot_url)
-                  $('.outline').show()
-                } else {
-                  $('.err_msg').text('网络错误')
-                }
+          let data = {}
+          $('button[name=button]').text() === '生成' ? data = {url: val, type: 1} : data = {hash: val, type: 2}
+          $.ajax({
+            url: '/url',
+            method: 'POST',
+            data,
+            success: function (res) {
+              if (res.code === 1) {
+                $('a.ori').text(res.url).attr('href', res.url)
+                $('a.sho').text(res.shot_url).attr('href', res.shot_url)
+                $('.outline').show()
+              } else {
+                $('.err_msg').text(res.err)
               }
-            })
+            }
+          })
         }
       }
     })

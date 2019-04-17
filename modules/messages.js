@@ -1,6 +1,20 @@
 const mysql = require('../database/mysql')
 
+// dc: 每日增长， dr: 每日阅读， ds: 每日信息总量
 module.exports = {
+  getMonthModle: function (req, res) {
+    mysql.query(`SELECT
+      count(id) len,
+      DATE_FORMAT(post_time, '%Y年%m月') post_month
+      FROM api_businessmessage
+      GROUP BY DATE_FORMAT(post_time, '%y-%m');`, function (err, data) {
+      if (err) {
+        res.send({err})
+      }else {
+        res.send({data})
+      }
+    })
+  },
   getMessageModule: function (req, res) {
     mysql.query(`SELECT
       DATE_FORMAT(post_time, '%Y-%m-%d') as create_time,
