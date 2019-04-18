@@ -1,12 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <script src='/javascripts/echarts.min.js'></script>
+  <script src='/javascripts/jquery.min.js'></script>
+  <title>企业消息统计</title>
+  <style media="screen">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html {
+      height: 100%;
+    }
+    body {
+      min-height: 100%;
+      background: #fafafa;
+    }
+  </style>
 </head>
 <body>
-
+  <div class="container">
+    <h2>企业消息统计系统</h2>
+    <canvas id="canvas" width="1400" height="600"></canvas>
+    <ul style="display: none">
+      <%for (let i = 0; i <= month.length - 1; i++) {%>
+        <li>
+          <span class="month_arr"><%=month[i].post_month%></span>
+          <span class="len_arr"><%=month[i].len%></span>
+        </li>
+      <%}%>
+    </ul>
+  </div>
+  <script type="text/javascript">
+    let monthArr = []
+    $('.month_arr').map((index, val) => {
+      monthArr.push($(val).text())
+    })
+    let lenArr = []
+    let s = 0
+    $('.len_arr').map((index, val) => {
+      lenArr.push($(val).text())
+      s += Number($(val).text())
+    })
+    const option = {
+      xAxis: {
+          type: 'category',
+          data: monthArr,
+          triggerEvent:true
+      },
+      yAxis: {
+          type: 'value',
+          triggerEvent:true
+      },
+      series: [{
+          data: lenArr,
+          type: 'bar',
+          legendHoverLink: true,
+          itemStyle: {
+            color: '#4CAF50'
+          },
+          label: {
+            show: true,
+            position: 'top',
+            color: '#666',
+            formatter: function (a) {
+              return (a.value / s * 100).toFixed(2) + '%'
+            }
+          }
+      }]
+    }
+    let dom = document.getElementById('canvas')
+    let myChart = echarts.init(dom)
+    myChart.on('click', function (e) {
+      console.log(e)
+    })
+    if (option && typeof option === "object") {
+      myChart.setOption(option, true);
+    }
+  </script>
 </body>
 </html>

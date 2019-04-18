@@ -3,15 +3,29 @@ const mysql = require('../database/mysql')
 // dc: 每日增长， dr: 每日阅读， ds: 每日信息总量
 module.exports = {
   getMonthModle: function (req, res) {
+    let monthArr = []
+    for (let i = 1; i <= 12; i++) {
+      let str = i < 10 ? '0' + i : i.toString()
+      monthArr.push({len: 0, post_month: `2018年${str}月`, months: str})
+    }
     mysql.query(`SELECT
       count(id) len,
-      DATE_FORMAT(post_time, '%Y年%m月') post_month
+      DATE_FORMAT(post_time, '%Y年%m月') post_month,
+      DATE_FORMAT(post_time, '%m') months
       FROM api_businessmessage
       GROUP BY DATE_FORMAT(post_time, '%y-%m');`, function (err, data) {
       if (err) {
         res.send({err})
       }else {
-        res.send({data})
+        monthArr.forEach((val, index) => {
+          data.forEach(cur => {
+            if (cur.months === val.months) {
+              monthArr[index] = cur
+            }
+          })
+        })
+        console.log(monthArr)
+        res.render('message', {month: monthArr})
       }
     })
   },

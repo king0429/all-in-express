@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="/stylesheets/sweetalert2.min.css">
+  <script src='/javascripts/echarts.min.js'></script>
+  <script src='/javascripts/jquery.min.js'></script>
+  <script src='/javascripts/sweetalert2.min.js'></script>
+
+  <title>九星APP投票大使</title>
+  <style media="screen">
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      padding: 0 200px;
+    }
+    select {
+      width: 240px;
+      padding: 0 5px;
+      border: 1px solid #dadada;
+      margin-right: 15px;
+      height: 30px;
+      outline: none;
+    }
+    button[name=button] {
+      width: 120px;
+      height: 30px;
+      background: #eb6100;
+      color: #fff;
+      border: none;
+      outline: none;
+    }
+    .title {
+      padding: 0 200px;
+      line-height: 45px;
+      font-size: 26px;
+      font-weight: 600;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <p class="title">点击投票，每人三票</p>
+  <canvas id="canvas" width="1920" height="800"></canvas>
+  <div class="container">
+    <select class="role">
+      <option value="-1">选择你的名字</option>
+      <option value="0">zhen</option>
+      <option value="1">亚然</option>
+      <option value="2">嘉英</option>
+      <option value="3">尚鸿</option>
+      <option value="4">小白</option>
+      <option value="5">岁生</option>
+      <option value="6">帅</option>
+      <option value="7">张庆祝</option>
+      <option value="8">张标</option>
+      <option value="9">彦希</option>
+      <option value="10">小凯</option>
+      <option value="11">李聪</option>
+      <option value="12">矿矿</option>
+      <option value="13">艾珅</option>
+      <option value="14">菁杰</option>
+      <option value="15">行</option>
+      <option value="16">赵俊明</option>
+      <option value="17">雷云朵</option>
+    </select>
+    <select class="names" name="">
+      <option value="-1">选择你喜欢的名字</option>
+      <%for (let i = 0; i <= vote.length - 1; i++) {%>
+        <option value="<%=vote[i].id%>" class="vote_name" data-len='<%=vote[i].len%>'><%=vote[i].name%></option>
+      <%}%>
+    </select>
+    <button type="button" name="button">投票</button>
+  </div>
+  <script type="text/javascript">
+    let nameArr = []
+    let timeArr = []
+    let s = 0
+    $('.vote_name').map((i, v) => {
+      nameArr.push($(v).text())
+      s += Number($(v).data('len'))
+      timeArr.push($(v).data('len'))
+    })
+    const option = {
+      xAxis: {
+          type: 'category',
+          data: nameArr,
+          triggerEvent:true
+      },
+      yAxis: {
+        show: false,
+        type: 'value',
+        triggerEvent:true
+      },
+      series: [{
+          data: timeArr,
+          type: 'bar',
+          legendHoverLink: true,
+          itemStyle: {
+            color: '#38adff'
+          },
+          label: {
+            show: true,
+            position: 'top',
+            color: '#666',
+          }
+      }]
+    }
+    let dom = document.getElementById('canvas')
+    let myChart = echarts.init(dom)
+    myChart.on('click', function (e) {
+    })
+    if (option && typeof option === "object") {
+      myChart.setOption(option, true);
+    }
+    $('button[name=button]').on('click', function (e) {
+      if ($('.role').val() < 0) {
+        swal('错误', '让我知道你是谁', 'error')
+      } else {
+        if ($('.names').val() < 0) {
+          swal('错误', '让我知道你想投给谁', 'error')
+        } else {
+          swal({
+            title: '确认投票?',
+            text: "每人三票，过期不候",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: '再想想',
+            confirmButtonText: '确定',
+          }).then(res => {
+            if (res) {
+              $.ajax({
+                url: '/vote?time=' + new Date().getTime(),
+                data: {role: $('.role').val(), named: $('.names').val()},
+                method: 'POST',
+                success: function (res) {
+                  if (res.code === 1) {
+                    swal('投票成功', '珍惜机会', 'success')
+                    window.location.reload()
+                  } else {
+                    swal('投票失败', res.err, 'error')
+                  }
+                }
+              })
+            }
+          })
+        }
+      }
+    })
+  </script>
+</body>
+</html>

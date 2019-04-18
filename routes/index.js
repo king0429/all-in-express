@@ -13,6 +13,7 @@ const {getLegalperson} = require('../modules/business')
 const {getWikiModule, insertWikiModule, getWikeDetail} = require('../modules/wiki')
 const {getMessageModule, getMonthModle}  = require('../modules/messages')
 const {getUrlModule, setUrlModule, navigatorModule} = require('../modules/url')
+const {getVoteModule, setVoteModule} = require('../modules/vote')
 // var graphqlHTTP = require('express-graphql');
 // var { buildSchema } = require('graphql');
 
@@ -73,5 +74,8 @@ router.route('/url').get(getUrlModule).post(setUrlModule)
 
 // 短URL跳转
 router.route('/url/:id').get(navigatorModule)
+
+// 投票
+router.route('/vote').get(getVoteModule).post(setVoteModule)
 
 module.exports = router;
