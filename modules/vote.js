@@ -7,13 +7,16 @@ module.exports = {
       if (err) {
         res.send({err})
       } else {
-        res.render('vote', {vote: data})
+        redis.get('vote', function (data1, err) {
+          res.render('vote', {vote: data})
+        })
       }
     })
   },
   setVoteModule: function (req, res) {
     let {role, named} = req.body
     redis.get('vote', function (err, data) {
+      console.log('vote', data)
       if (err) {
         res.send(err)
       } else {

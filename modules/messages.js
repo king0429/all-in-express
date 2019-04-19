@@ -56,5 +56,23 @@ module.exports = {
           res.send({dc, dr, len1: data.length, len2: dc.length, ds, len3: ds.length})
         }
       })
+  },
+  getMonthDetailModule: function (req, res) {
+    let month = req.body.month
+    console.log(month)
+    mysql.query(`SELECT
+      count(id) len,
+      GROUP_CONCAT(id) ids,
+      GROUP_CONCAT(\`read\`) show_reads,
+      DATE_FORMAT(post_time, '%Y年%m月%d日') AS show_date
+      from api_businessmessage
+      where DATE_FORMAT(post_time, '%Y年%m月') = '${month}'
+      GROUP BY show_date;`, function (err, data) {
+      if (err) {
+        res.send({err})
+      } else {
+        res.send({data})
+      }
+    })
   }
 }
