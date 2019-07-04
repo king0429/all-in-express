@@ -14,6 +14,8 @@ const {getWikiModule, insertWikiModule, getWikeDetail} = require('../modules/wik
 const {getMessageModule, getMonthModle, getMonthDetailModule}  = require('../modules/messages')
 const {getUrlModule, setUrlModule, navigatorModule} = require('../modules/url')
 const {getVoteModule, setVoteModule} = require('../modules/vote')
+
+const {getXlsFile} = require('../modules/xls')
 // var graphqlHTTP = require('express-graphql');
 // var { buildSchema } = require('graphql');
 
@@ -77,5 +79,8 @@ router.route('/url/:id').get(navigatorModule)
 
 // 投票
 router.route('/vote').get(getVoteModule).post(setVoteModule)
+
+// 读取xls文件计算
+router.route('/xls').get(getXlsFile)
 
 module.exports = router;
